@@ -72,7 +72,8 @@ html[dir="ltr"] .app {
   color: #fff;
 }
 
-.btn-start {
+.btn-start,
+a.btn-start {
   background: #4CAF50;
   border: none;
   color: #fff;
@@ -82,9 +83,12 @@ html[dir="ltr"] .app {
   font-size: 1rem;
   font-weight: 600;
   transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
 }
 
-.btn-start:hover {
+.btn-start:hover,
+a.btn-start:hover {
   background: #45a049;
   transform: translateY(-2px);
 }
