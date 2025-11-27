@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 import { translations } from '../translations/translations'
 import LanguageSwitcher from '../components/LanguageSwitcher'
@@ -7,12 +6,7 @@ import './BankerLoginPage.css'
 
 function BankerLoginPage() {
   const { language } = useLanguage()
-  const navigate = useNavigate()
   const t = translations[language]
-
-  const handleBankSelection = (bankType) => {
-    navigate(`banker/login?type=${bankType}`)
-  }
 
   return (
     <div className="banker-login-page">
@@ -31,19 +25,27 @@ function BankerLoginPage() {
           </div>
 
           <div className="bank-selection">
-            <div className="bank-card" onClick={() => handleBankSelection('normal')}>
-              <div className="bank-icon">🏦</div>
-              <h2>{t.normalBank}</h2>
-              <p>{t.continueAsNormalBanker}</p>
-              <button className="btn-bank-select">{t.continueAsNormalBanker}</button>
-            </div>
+            <Link to="banker/login?type=normal" className="bank-card-link">
+              <div className="bank-card">
+                <div className="bank-icon">🏦</div>
+                <h2>{t.normalBank}</h2>
+                <p>{t.continueAsNormalBanker}</p>
+                <div className="btn-bank-select">
+                  {t.continueAsNormalBanker}
+                </div>
+              </div>
+            </Link>
 
-            <div className="bank-card" onClick={() => handleBankSelection('islamic')}>
-              <div className="bank-icon">🕌</div>
-              <h2>{t.islamicBank}</h2>
-              <p>{t.continueAsIslamicBanker}</p>
-              <button className="btn-bank-select">{t.continueAsIslamicBanker}</button>
-            </div>
+            <Link to="banker/login?type=islamic" className="bank-card-link">
+              <div className="bank-card">
+                <div className="bank-icon">🕌</div>
+                <h2>{t.islamicBank}</h2>
+                <p>{t.continueAsIslamicBanker}</p>
+                <div className="btn-bank-select">
+                  {t.continueAsIslamicBanker}
+                </div>
+              </div>
+            </Link>
           </div>
 
           <div className="back-to-home">
