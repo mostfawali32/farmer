@@ -53,8 +53,8 @@ function HomePage() {
                 {t.heroDescription}
               </p>
               <div className="hero-buttons">
-                <Link to="farmer" className="btn-farmer">{t.startAsFarmer} ←</Link>
-                <Link to="banker" className="btn-bank">{t.bankEmployeeLogin}</Link>
+                <Link to="/farmer" className="btn-farmer">{t.startAsFarmer} ←</Link>
+                <Link to="/banker" className="btn-bank">{t.bankEmployeeLogin}</Link>
               </div>
               <div className="hero-stats">
                 <div className="stat">
@@ -166,7 +166,7 @@ function HomePage() {
             {t.ctaDescription}
           </p>
           <div className="cta-buttons">
-            <Link to="farmer" className="btn-cta-primary">{t.createFarmerAccount}</Link>
+            <Link to="/farmer" className="btn-cta-primary">{t.createFarmerAccount}</Link>
             <button className="btn-cta-secondary">{t.learnMore}</button>
           </div>
           <div className="cta-features">

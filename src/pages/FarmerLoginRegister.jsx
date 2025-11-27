@@ -188,7 +188,7 @@ function FarmerLoginRegister() {
           <div className="auth-footer">
             <button 
               className="btn-back"
-              onClick={() => navigate('farmer')}
+              onClick={() => navigate('/farmer')}
             >
               ← {t.backToHome}
             </button>

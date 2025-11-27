@@ -198,7 +198,7 @@ function BankerLoginRegister() {
           <div className="auth-footer">
             <button 
               className="btn-back"
-              onClick={() => navigate('banker')}
+              onClick={() => navigate('/banker')}
             >
               ← {t.backToBankSelection}
             </button>

@@ -101,7 +101,7 @@ function BankerDashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem('bankerAuth')
-    navigate('banker')
+    navigate('/banker')
   }
 
   if (!userInfo) {

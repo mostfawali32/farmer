@@ -18,14 +18,14 @@ function BankerLoginPage() {
             <h1>{t.bankerLoginTitle}</h1>
             <p>{t.selectBankType}</p>
             <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-              <Link to="banker/login?type=normal" className="btn-start">
+              <Link to="/banker/login?type=normal" className="btn-start">
                 {t.startNow}
               </Link>
             </div>
           </div>
 
           <div className="bank-selection">
-            <Link to="banker/login?type=normal" className="bank-card-link">
+            <Link to="/banker/login?type=normal" className="bank-card-link">
               <div className="bank-card">
                 <div className="bank-icon">🏦</div>
                 <h2>{t.normalBank}</h2>
@@ -36,7 +36,7 @@ function BankerLoginPage() {
               </div>
             </Link>
 
-            <Link to="banker/login?type=islamic" className="bank-card-link">
+            <Link to="/banker/login?type=islamic" className="bank-card-link">
               <div className="bank-card">
                 <div className="bank-icon">🕌</div>
                 <h2>{t.islamicBank}</h2>

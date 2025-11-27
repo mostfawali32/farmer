@@ -33,7 +33,7 @@ function FarmerDashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem('farmerAuth')
-    navigate('farmer')
+    navigate('/farmer')
   }
 
   if (!userInfo) {
