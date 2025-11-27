@@ -1,0 +1,170 @@
+.tts-helper {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+html[dir="rtl"] .tts-helper {
+  left: auto;
+  right: 50%;
+  transform: translateX(50%);
+}
+
+.tts-instruction {
+  background: rgba(76, 175, 80, 0.95);
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  font-size: 0.9rem;
+  font-weight: 500;
+  max-width: 90%;
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tts-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.tts-text {
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .tts-instruction {
+    font-size: 0.8rem;
+    padding: 0.6rem 1rem;
+  }
+
+  .tts-text {
+    white-space: normal;
+  }
+}
+
+.tts-close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.3s;
+}
+
+.tts-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Read button that appears when text is selected */
+.tts-read-button-container {
+  position: fixed;
+  top: 50%;
+  right: 2rem;
+  transform: translateY(-50%);
+  z-index: 1001;
+  pointer-events: none;
+}
+
+html[dir="rtl"] .tts-read-button-container {
+  right: auto;
+  left: 2rem;
+}
+
+.tts-read-button {
+  background: #4CAF50;
+  border: none;
+  color: #fff;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  pointer-events: all;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 2s infinite;
+}
+
+.tts-read-button:hover {
+  background: #45a049;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+}
+
+.tts-read-button.reading {
+  background: #FF9800;
+  animation: pulse-reading 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(76, 175, 80, 0.6);
+  }
+}
+
+@keyframes pulse-reading {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+    transform: translateY(-50%) scale(1);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(255, 152, 0, 0.6);
+    transform: translateY(-50%) scale(1.05);
+  }
+}
+
+@media (max-width: 768px) {
+  .tts-read-button-container {
+    right: 1rem;
+    top: auto;
+    bottom: 5rem;
+    transform: none;
+  }
+
+  html[dir="rtl"] .tts-read-button-container {
+    right: auto;
+    left: 1rem;
+  }
+
+  .tts-read-button {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+
+  .tts-read-button:hover {
+    transform: scale(1.1);
+  }
+}
+

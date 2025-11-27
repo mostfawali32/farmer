@@ -1,0 +1,49 @@
+.read-all-button {
+  background: #4CAF50;
+  border: none;
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.read-all-button:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.read-all-button.reading {
+  background: #FF9800;
+}
+
+.read-all-button.reading:hover {
+  background: #F57C00;
+}
+
+.read-icon {
+  font-size: 1.2rem;
+}
+
+.read-text {
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .read-all-button {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .read-text {
+    display: none;
+  }
+}
+
