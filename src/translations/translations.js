@@ -150,7 +150,26 @@ export const translations = {
     farmerDashboardTitle: 'لوحة تحكم المزارع',
     bankerDashboardTitle: 'لوحة تحكم الموظف',
     welcomeBack: 'مرحباً بعودتك',
-    welcome: 'مرحباً'
+    welcome: 'مرحباً',
+    uploadDocuments: 'رفع الوثائق',
+    uploadDocumentsDescription: 'قم برفع جميع الوثائق المطلوبة لتنظيم أوراق أرضك',
+    cinDocument: 'بطاقة التعريف الوطنية (CIN)',
+    landPapersDocument: 'أوراق الأرض',
+    proofOfExploitationDocument: 'إثبات استغلال الأرض',
+    expertReportDocument: 'تقرير الخبير',
+    dragDropFiles: 'اسحب وأفلت الملفات هنا أو انقر للاختيار',
+    selectFiles: 'اختر الملفات',
+    uploadedFiles: 'الملفات المرفوعة',
+    noFilesUploaded: 'لم يتم رفع أي ملفات بعد',
+    deleteFile: 'حذف',
+    fileUploaded: 'تم رفع الملف بنجاح',
+    fileDeleted: 'تم حذف الملف',
+    maxFileSize: 'الحد الأقصى لحجم الملف: 10 ميجابايت',
+    supportedFormats: 'الصيغ المدعومة: PDF, JPG, PNG',
+    uploadError: 'حدث خطأ أثناء رفع الملف',
+    submitDocuments: 'إرسال الوثائق',
+    documentsSubmitted: 'تم إرسال الوثائق بنجاح',
+    submitting: 'جاري الإرسال...'
   },
   fr: {
     // Header
@@ -303,7 +322,26 @@ export const translations = {
     farmerDashboardTitle: 'Tableau de bord agriculteur',
     bankerDashboardTitle: 'Tableau de bord employé',
     welcomeBack: 'Bon retour',
-    welcome: 'Bienvenue'
+    welcome: 'Bienvenue',
+    uploadDocuments: 'Télécharger les documents',
+    uploadDocumentsDescription: 'Téléchargez tous les documents requis pour régulariser vos papiers de terrain',
+    cinDocument: 'Carte d\'identité nationale (CIN)',
+    landPapersDocument: 'Papiers de terrain',
+    proofOfExploitationDocument: 'Preuve d\'exploitation du terrain',
+    expertReportDocument: 'Rapport d\'expert',
+    dragDropFiles: 'Glissez-déposez les fichiers ici ou cliquez pour sélectionner',
+    selectFiles: 'Sélectionner les fichiers',
+    uploadedFiles: 'Fichiers téléchargés',
+    noFilesUploaded: 'Aucun fichier téléchargé pour le moment',
+    deleteFile: 'Supprimer',
+    fileUploaded: 'Fichier téléchargé avec succès',
+    fileDeleted: 'Fichier supprimé',
+    maxFileSize: 'Taille maximale du fichier : 10 Mo',
+    supportedFormats: 'Formats pris en charge : PDF, JPG, PNG',
+    uploadError: 'Une erreur s\'est produite lors du téléchargement du fichier',
+    submitDocuments: 'Soumettre les documents',
+    documentsSubmitted: 'Documents soumis avec succès',
+    submitting: 'Envoi en cours...'
   }
 }
 
