@@ -4,6 +4,8 @@ import { useLanguage } from '../contexts/LanguageContext'
 import { translations } from '../translations/translations'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import ReadAllButton from '../components/ReadAllButton'
+import Notification from '../components/Notification'
+import { useNotification } from '../hooks/useNotification'
 import './FarmerDashboard.css'
 
 function FarmerDashboard() {
@@ -31,6 +33,7 @@ function FarmerDashboard() {
     cin: ''
   })
   const [applicationStatus, setApplicationStatus] = useState(null)
+  const { notification, showNotification, hideNotification } = useNotification()
 
   useEffect(() => {
     // Check authentication
@@ -92,11 +95,17 @@ function FarmerDashboard() {
     
     const validFiles = Array.from(files).filter(file => {
       if (file.size > maxSize) {
-        alert(language === 'ar' ? 'حجم الملف كبير جداً (الحد الأقصى: 10 ميجابايت)' : 'Fichier trop volumineux (max: 10 Mo)')
+        showNotification(
+          language === 'ar' ? 'حجم الملف كبير جداً (الحد الأقصى: 10 ميجابايت)' : 'Fichier trop volumineux (max: 10 Mo)',
+          'error'
+        )
         return false
       }
       if (!allowedTypes.includes(file.type)) {
-        alert(language === 'ar' ? 'نوع الملف غير مدعوم (PDF, JPG, PNG فقط)' : 'Type de fichier non supporté (PDF, JPG, PNG uniquement)')
+        showNotification(
+          language === 'ar' ? 'نوع الملف غير مدعوم (PDF, JPG, PNG فقط)' : 'Type de fichier non supporté (PDF, JPG, PNG uniquement)',
+          'error'
+        )
         return false
       }
       return true
@@ -143,25 +152,34 @@ function FarmerDashboard() {
   const handleSubmitDocuments = async () => {
     // Validate required fields
     if (!farmerInfo.name || !farmerInfo.cin) {
-      alert(language === 'ar' 
-        ? 'يرجى إدخال الاسم ورقم بطاقة التعريف الوطنية' 
-        : 'Veuillez entrer le nom et le numéro CIN')
+      showNotification(
+        language === 'ar' 
+          ? 'يرجى إدخال الاسم ورقم بطاقة التعريف الوطنية' 
+          : 'Veuillez entrer le nom et le numéro CIN',
+        'warning'
+      )
       return
     }
 
     // Validate required files based on solution
     if (solution === '1') {
       if (uploadedFiles.cin.length === 0 || uploadedFiles.landPapers.length === 0 || uploadedFiles.proofOfExploitation.length === 0) {
-        alert(language === 'ar' 
-          ? 'يرجى رفع جميع الوثائق المطلوبة (CIN، أوراق الأرض، إثبات الاستغلال)' 
-          : 'Veuillez télécharger tous les documents requis (CIN, papiers de terrain, preuve d\'exploitation)')
+        showNotification(
+          language === 'ar' 
+            ? 'يرجى رفع جميع الوثائق المطلوبة (CIN، أوراق الأرض، إثبات الاستغلال)' 
+            : 'Veuillez télécharger tous les documents requis (CIN, papiers de terrain, preuve d\'exploitation)',
+          'warning'
+        )
         return
       }
     } else {
       if (uploadedFiles.cin.length === 0 || uploadedFiles.landPapers.length === 0 || !equipmentRequest.equipmentType) {
-        alert(language === 'ar' 
-          ? 'يرجى رفع جميع الوثائق المطلوبة (CIN، أوراق الأرض) واختيار نوع المعدات' 
-          : 'Veuillez télécharger tous les documents requis (CIN, papiers de terrain) et sélectionner le type d\'équipement')
+        showNotification(
+          language === 'ar' 
+            ? 'يرجى رفع جميع الوثائق المطلوبة (CIN، أوراق الأرض) واختيار نوع المعدات' 
+            : 'Veuillez télécharger tous les documents requis (CIN, papiers de terrain) et sélectionner le type d\'équipement',
+          'warning'
+        )
         return
       }
     }
@@ -205,7 +223,10 @@ function FarmerDashboard() {
     setTimeout(() => {
       setIsSubmitting(false)
       setApplicationStatus('pending')
-      alert(language === 'ar' ? t.documentsSubmitted : t.documentsSubmitted)
+      showNotification(
+        language === 'ar' ? t.documentsSubmitted : t.documentsSubmitted,
+        'success'
+      )
     }, 1500)
   }
 
@@ -224,6 +245,14 @@ function FarmerDashboard() {
   return (
     <div className="farmer-dashboard">
       <LanguageSwitcher />
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={hideNotification}
+          duration={notification.duration}
+        />
+      )}
       <div className="dashboard-container">
         <div className="dashboard-header">
           <div className="header-left">
