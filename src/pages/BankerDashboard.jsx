@@ -80,7 +80,7 @@ function BankerDashboard() {
     // Check authentication
     const auth = localStorage.getItem('bankerAuth')
     if (!auth) {
-      navigate(`banker/login?type=${bankType}`)
+      navigate(`/banker/login?type=${bankType}`)
       return
     }
     
@@ -95,7 +95,7 @@ function BankerDashboard() {
         setFarmers(mockIslamicBankFarmers)
       }
     } catch (error) {
-      navigate(`banker/login?type=${bankType}`)
+      navigate(`/banker/login?type=${bankType}`)
     }
   }, [navigate, bankType])
 
