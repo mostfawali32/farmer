@@ -61,7 +61,7 @@ function FarmerPage() {
                   </li>
                 ))}
               </ul>
-              <Link to={`farmer/login?solution=1`} className="btn-solution">{t.getStarted}</Link>
+              <Link to="/farmer/login?solution=1" className="btn-solution">{t.getStarted}</Link>
             </div>
 
             {/* Solution 2 */}
