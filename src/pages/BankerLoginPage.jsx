@@ -23,6 +23,11 @@ function BankerLoginPage() {
             <span className="leaf-icon">🌱</span>
             <h1>{t.bankerLoginTitle}</h1>
             <p>{t.selectBankType}</p>
+            <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+              <Link to="banker/login?type=normal" className="btn-start">
+                {t.startNow}
+              </Link>
+            </div>
           </div>
 
           <div className="bank-selection">

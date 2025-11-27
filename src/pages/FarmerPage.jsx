@@ -17,7 +17,7 @@ function FarmerPage() {
           <div className="header-content">
             <div className="header-left">
               <button className="btn-login">{t.login}</button>
-              <button className="btn-start">{t.startNow}</button>
+              <Link to="farmer/login?solution=1" className="btn-start">{t.startNow}</Link>
             </div>
             <nav className="nav">
               <Link to="/">{t.features}</Link>
