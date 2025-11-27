@@ -156,7 +156,7 @@ function BankerDashboard() {
             </button>
             <button 
               className="btn-back-to-selection"
-              onClick={() => navigate('banker')}
+              onClick={() => navigate('/banker')}
             >
               {t.backToBankSelection}
             </button>

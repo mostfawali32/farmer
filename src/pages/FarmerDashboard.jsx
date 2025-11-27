@@ -162,7 +162,7 @@ function FarmerDashboard() {
           <div className="back-button-container">
             <button 
               className="btn-back"
-              onClick={() => navigate('farmer')}
+              onClick={() => navigate('/farmer')}
             >
               ← {t.backToHome}
             </button>
