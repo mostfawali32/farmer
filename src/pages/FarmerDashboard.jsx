@@ -5,6 +5,7 @@ import { translations } from '../translations/translations'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import ReadAllButton from '../components/ReadAllButton'
 import Notification from '../components/Notification'
+import LawyerChatBox from '../components/LawyerChatBox'
 import { useNotification } from '../hooks/useNotification'
 import './FarmerDashboard.css'
 
@@ -245,6 +246,7 @@ function FarmerDashboard() {
   return (
     <div className="farmer-dashboard">
       <LanguageSwitcher />
+      <LawyerChatBox solution={solution} />
       {notification && (
         <Notification
           message={notification.message}
