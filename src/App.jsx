@@ -14,18 +14,18 @@ import './App.css'
 function App() {
   return (
     <LanguageProvider>
-      <Router>
+      <Router basename="/">
         <div className="app-wrapper">
           <LanguageSwitcher />
           <TextToSpeechHandler />
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/farmer" element={<FarmerPage />} />
-            <Route path="/farmer/login" element={<FarmerLoginRegister />} />
-            <Route path="/farmer/dashboard" element={<FarmerDashboard />} />
-            <Route path="/banker" element={<BankerLoginPage />} />
-            <Route path="/banker/login" element={<BankerLoginRegister />} />
-            <Route path="/banker/dashboard" element={<BankerDashboard />} />
+            <Route path="farmer" element={<FarmerPage />} />
+            <Route path="farmer/login" element={<FarmerLoginRegister />} />
+            <Route path="farmer/dashboard" element={<FarmerDashboard />} />
+            <Route path="banker" element={<BankerLoginPage />} />
+            <Route path="banker/login" element={<BankerLoginRegister />} />
+            <Route path="banker/dashboard" element={<BankerDashboard />} />
           </Routes>
         </div>
       </Router>
