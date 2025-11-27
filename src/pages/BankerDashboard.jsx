@@ -88,16 +88,64 @@ function BankerDashboard() {
       const authData = JSON.parse(auth)
       setUserInfo(authData)
       
-      // Load farmers based on bank type
-      if (bankType === 'normal') {
-        setFarmers(mockNormalBankFarmers)
-      } else {
-        setFarmers(mockIslamicBankFarmers)
-      }
+      // Load real farmer applications from localStorage
+      const allApplications = JSON.parse(localStorage.getItem('farmerApplications') || '[]')
+      const filteredApplications = allApplications.filter(app => {
+        // For normal bank, show solution 1 applications
+        // For islamic bank, show solution 2 applications
+        if (bankType === 'normal') {
+          return app.bankType === 'normal' || app.solution === '1'
+        } else {
+          return app.bankType === 'islamic' || app.solution === '2'
+        }
+      })
+      
+      // Convert applications to farmer format
+      const farmersData = filteredApplications.map(app => {
+        if (bankType === 'normal') {
+          return {
+            id: app.id,
+            name: app.farmerName,
+            cin: app.cin,
+            email: app.farmerEmail,
+            landPapers: app.files.landPapers.length > 0 
+              ? `${app.files.landPapers.length} ${language === 'ar' ? 'ملف' : 'fichier(s)'}`
+              : (language === 'ar' ? 'لا توجد ملفات' : 'Aucun fichier'),
+            expertReport: app.files.expertReport.length > 0
+              ? `${app.files.expertReport.length} ${language === 'ar' ? 'ملف' : 'fichier(s)'}`
+              : (language === 'ar' ? 'لا توجد ملفات' : 'Aucun fichier'),
+            landPriceEstimation: app.files.expertReport.length > 0
+              ? (language === 'ar' ? 'في انتظار التقدير' : 'En attente d\'estimation')
+              : (language === 'ar' ? 'غير متوفر' : 'Non disponible'),
+            proofOfExploitation: app.files.proofOfExploitation.length > 0
+              ? `${app.files.proofOfExploitation.length} ${language === 'ar' ? 'ملف' : 'fichier(s)'}`
+              : (language === 'ar' ? 'لا توجد ملفات' : 'Aucun fichier'),
+            files: app.files,
+            status: app.status,
+            submittedAt: app.submittedAt
+          }
+        } else {
+          return {
+            id: app.id,
+            name: app.farmerName,
+            cin: app.cin,
+            email: app.farmerEmail,
+            equipmentDemands: [], // Will be filled from solution 2 form
+            landInformation: app.files.landPapers.length > 0
+              ? `${app.files.landPapers.length} ${language === 'ar' ? 'ملف' : 'fichier(s)'}`
+              : (language === 'ar' ? 'لا توجد ملفات' : 'Aucun fichier'),
+            files: app.files,
+            status: app.status,
+            submittedAt: app.submittedAt
+          }
+        }
+      })
+      
+      setFarmers(farmersData)
     } catch (error) {
       navigate(`/banker/login?type=${bankType}`)
     }
-  }, [navigate, bankType])
+  }, [navigate, bankType, language])
 
   const handleLogout = () => {
     localStorage.removeItem('bankerAuth')
@@ -109,11 +157,27 @@ function BankerDashboard() {
   }
 
   const handleApprove = (id) => {
+    // Update local state
     setFarmers(farmers.map(f => f.id === id ? { ...f, status: 'approved' } : f))
+    
+    // Update in localStorage
+    const allApplications = JSON.parse(localStorage.getItem('farmerApplications') || '[]')
+    const updatedApplications = allApplications.map(app => 
+      app.id === id ? { ...app, status: 'approved' } : app
+    )
+    localStorage.setItem('farmerApplications', JSON.stringify(updatedApplications))
   }
 
   const handleReject = (id) => {
+    // Update local state
     setFarmers(farmers.map(f => f.id === id ? { ...f, status: 'rejected' } : f))
+    
+    // Update in localStorage
+    const allApplications = JSON.parse(localStorage.getItem('farmerApplications') || '[]')
+    const updatedApplications = allApplications.map(app => 
+      app.id === id ? { ...app, status: 'rejected' } : app
+    )
+    localStorage.setItem('farmerApplications', JSON.stringify(updatedApplications))
   }
 
   const getStatusClass = (status) => {
@@ -198,11 +262,51 @@ function BankerDashboard() {
                       <>
                         <div className="info-section">
                           <h4>{t.landPapers}</h4>
-                          <p className="info-text">{farmer.landPapers}</p>
+                          {farmer.files?.landPapers && farmer.files.landPapers.length > 0 ? (
+                            <div className="files-list">
+                              {farmer.files.landPapers.map((file, idx) => (
+                                <div key={idx} className="file-item">
+                                  <span className="file-icon">📄</span>
+                                  <span className="file-name">{file.name}</span>
+                                  <span className="file-size">({(file.size / 1024).toFixed(1)} KB)</span>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="info-text">{farmer.landPapers}</p>
+                          )}
+                        </div>
+                        <div className="info-section">
+                          <h4>{t.cinDocument}</h4>
+                          {farmer.files?.cin && farmer.files.cin.length > 0 ? (
+                            <div className="files-list">
+                              {farmer.files.cin.map((file, idx) => (
+                                <div key={idx} className="file-item">
+                                  <span className="file-icon">🆔</span>
+                                  <span className="file-name">{file.name}</span>
+                                  <span className="file-size">({(file.size / 1024).toFixed(1)} KB)</span>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="info-text">{language === 'ar' ? 'لا توجد ملفات' : 'Aucun fichier'}</p>
+                          )}
                         </div>
                         <div className="info-section">
                           <h4>{t.expertReport}</h4>
-                          <p className="info-text">{farmer.expertReport}</p>
+                          {farmer.files?.expertReport && farmer.files.expertReport.length > 0 ? (
+                            <div className="files-list">
+                              {farmer.files.expertReport.map((file, idx) => (
+                                <div key={idx} className="file-item">
+                                  <span className="file-icon">📊</span>
+                                  <span className="file-name">{file.name}</span>
+                                  <span className="file-size">({(file.size / 1024).toFixed(1)} KB)</span>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="info-text">{farmer.expertReport}</p>
+                          )}
                         </div>
                         <div className="info-section">
                           <h4>{t.landPriceEstimation}</h4>
@@ -210,7 +314,19 @@ function BankerDashboard() {
                         </div>
                         <div className="info-section">
                           <h4>{t.proofOfExploitation}</h4>
-                          <p className="info-text">{farmer.proofOfExploitation}</p>
+                          {farmer.files?.proofOfExploitation && farmer.files.proofOfExploitation.length > 0 ? (
+                            <div className="files-list">
+                              {farmer.files.proofOfExploitation.map((file, idx) => (
+                                <div key={idx} className="file-item">
+                                  <span className="file-icon">📑</span>
+                                  <span className="file-name">{file.name}</span>
+                                  <span className="file-size">({(file.size / 1024).toFixed(1)} KB)</span>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="info-text">{farmer.proofOfExploitation}</p>
+                          )}
                         </div>
                       </>
                     ) : (

@@ -241,6 +241,39 @@ html[dir="ltr"] .banker-dashboard {
   font-weight: 500;
 }
 
+.files-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: #E8F5E9;
+  border-radius: 6px;
+  border: 1px solid #C8E6C9;
+}
+
+.file-icon {
+  font-size: 1.2rem;
+}
+
+.file-name {
+  flex: 1;
+  color: #2E7D32;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.file-size {
+  color: #666;
+  font-size: 0.85rem;
+}
+
 .folder-actions {
   display: flex;
   gap: 1rem;

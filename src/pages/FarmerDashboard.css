@@ -219,6 +219,7 @@ html[dir="ltr"] .step-item {
   color: #333;
 }
 
+.form-input,
 .form-select,
 .form-textarea {
   padding: 0.9rem;
@@ -227,6 +228,13 @@ html[dir="ltr"] .step-item {
   font-size: 1rem;
   font-family: inherit;
   transition: border-color 0.3s;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #4CAF50;
 }
 
 .form-select:focus,
@@ -455,6 +463,43 @@ html[dir="ltr"] .step-item {
 
 .btn-back:hover {
   background: #e0e0e0;
+}
+
+.status-card {
+  margin-bottom: 2rem;
+}
+
+.status-display {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.status-display.pending {
+  background: #FFF3E0;
+  color: #F57C00;
+}
+
+.status-display.approved {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.status-display.rejected {
+  background: #FFEBEE;
+  color: #C62828;
+}
+
+.status-icon {
+  font-size: 2rem;
+}
+
+.status-text {
+  flex: 1;
 }
 
 @media (max-width: 768px) {

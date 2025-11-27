@@ -21,6 +21,11 @@ function FarmerDashboard() {
     expertReport: []
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [farmerInfo, setFarmerInfo] = useState({
+    name: '',
+    cin: ''
+  })
+  const [applicationStatus, setApplicationStatus] = useState(null)
 
   useEffect(() => {
     // Check authentication
@@ -39,7 +44,7 @@ function FarmerDashboard() {
   }, [navigate, solution])
 
   useEffect(() => {
-    // Load uploaded files from localStorage after userInfo is set
+    // Load uploaded files and farmer info from localStorage after userInfo is set
     if (userInfo?.email) {
       const savedFiles = localStorage.getItem(`farmerFiles_${userInfo.email}_${solution}`)
       if (savedFiles) {
@@ -48,6 +53,25 @@ function FarmerDashboard() {
         } catch (error) {
           console.error('Error loading saved files:', error)
         }
+      }
+
+      // Load farmer info
+      const savedInfo = localStorage.getItem(`farmerInfo_${userInfo.email}`)
+      if (savedInfo) {
+        try {
+          setFarmerInfo(JSON.parse(savedInfo))
+        } catch (error) {
+          console.error('Error loading farmer info:', error)
+        }
+      }
+
+      // Load application status
+      const allApplications = JSON.parse(localStorage.getItem('farmerApplications') || '[]')
+      const userApplication = allApplications.find(app => 
+        app.farmerEmail === userInfo.email && app.solution === solution
+      )
+      if (userApplication) {
+        setApplicationStatus(userApplication.status)
       }
     }
   }, [userInfo, solution])
@@ -112,12 +136,59 @@ function FarmerDashboard() {
   }
 
   const handleSubmitDocuments = async () => {
+    // Validate required fields
+    if (!farmerInfo.name || !farmerInfo.cin) {
+      alert(language === 'ar' 
+        ? 'يرجى إدخال الاسم ورقم بطاقة التعريف الوطنية' 
+        : 'Veuillez entrer le nom et le numéro CIN')
+      return
+    }
+
+    // Validate required files
+    if (uploadedFiles.cin.length === 0 || uploadedFiles.landPapers.length === 0 || uploadedFiles.proofOfExploitation.length === 0) {
+      alert(language === 'ar' 
+        ? 'يرجى رفع جميع الوثائق المطلوبة (CIN، أوراق الأرض، إثبات الاستغلال)' 
+        : 'Veuillez télécharger tous les documents requis (CIN, papiers de terrain, preuve d\'exploitation)')
+      return
+    }
+
     setIsSubmitting(true)
+    
+    // Create application object
+    const application = {
+      id: Date.now(),
+      farmerEmail: userInfo.email,
+      farmerName: farmerInfo.name,
+      cin: farmerInfo.cin,
+      solution: solution,
+      files: {
+        cin: uploadedFiles.cin.map(f => ({ name: f.name, size: f.size, type: f.type })),
+        landPapers: uploadedFiles.landPapers.map(f => ({ name: f.name, size: f.size, type: f.type })),
+        proofOfExploitation: uploadedFiles.proofOfExploitation.map(f => ({ name: f.name, size: f.size, type: f.type })),
+        expertReport: uploadedFiles.expertReport.map(f => ({ name: f.name, size: f.size, type: f.type }))
+      },
+      status: 'pending',
+      submittedAt: new Date().toISOString(),
+      bankType: solution === '1' ? 'normal' : 'islamic'
+    }
+
+    // Save application to shared storage
+    const allApplications = JSON.parse(localStorage.getItem('farmerApplications') || '[]')
+    // Remove existing application for this farmer and solution
+    const filteredApplications = allApplications.filter(app => 
+      !(app.farmerEmail === userInfo.email && app.solution === solution)
+    )
+    filteredApplications.push(application)
+    localStorage.setItem('farmerApplications', JSON.stringify(filteredApplications))
+
+    // Save farmer info
+    localStorage.setItem(`farmerInfo_${userInfo.email}`, JSON.stringify(farmerInfo))
+
     // Simulate API call
     setTimeout(() => {
       setIsSubmitting(false)
+      setApplicationStatus('pending')
       alert(language === 'ar' ? t.documentsSubmitted : t.documentsSubmitted)
-      // Update step 1 status to completed
     }, 1500)
   }
 
@@ -175,6 +246,51 @@ function FarmerDashboard() {
 
           {solution === '1' ? (
             <div className="solution-content">
+              {/* Personal Information Form */}
+              <div className="info-card">
+                <h3>{language === 'ar' ? 'المعلومات الشخصية' : 'Informations personnelles'}</h3>
+                <div className="form-group">
+                  <label>{t.name}</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    value={farmerInfo.name}
+                    onChange={(e) => setFarmerInfo({ ...farmerInfo, name: e.target.value })}
+                    placeholder={language === 'ar' ? 'أدخل اسمك الكامل' : 'Entrez votre nom complet'}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>{t.cin}</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    value={farmerInfo.cin}
+                    onChange={(e) => setFarmerInfo({ ...farmerInfo, cin: e.target.value })}
+                    placeholder={language === 'ar' ? 'أدخل رقم بطاقة التعريف الوطنية' : 'Entrez votre numéro CIN'}
+                  />
+                </div>
+              </div>
+
+              {/* Application Status */}
+              {applicationStatus && (
+                <div className="info-card status-card">
+                  <h3>{language === 'ar' ? 'حالة الطلب' : 'Statut de la demande'}</h3>
+                  <div className={`status-display ${applicationStatus}`}>
+                    <span className="status-icon">
+                      {applicationStatus === 'approved' ? '✅' : applicationStatus === 'rejected' ? '❌' : '⏳'}
+                    </span>
+                    <span className="status-text">
+                      {applicationStatus === 'approved' 
+                        ? (language === 'ar' ? 'تم الموافقة على طلبك' : 'Votre demande a été approuvée')
+                        : applicationStatus === 'rejected'
+                        ? (language === 'ar' ? 'تم رفض طلبك' : 'Votre demande a été rejetée')
+                        : (language === 'ar' ? 'طلبك قيد المراجعة' : 'Votre demande est en cours d\'examen')
+                      }
+                    </span>
+                  </div>
+                </div>
+              )}
+
               {/* File Upload Section */}
               <div className="info-card upload-section">
                 <h3>{t.uploadDocuments}</h3>
