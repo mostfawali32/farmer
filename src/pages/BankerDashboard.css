@@ -241,6 +241,14 @@ html[dir="ltr"] .banker-dashboard {
   font-weight: 500;
 }
 
+.equipment-item {
+  padding: 0.5rem;
+  background: #E8F5E9;
+  border-radius: 6px;
+  color: #2E7D32;
+  font-weight: 500;
+}
+
 .files-list {
   display: flex;
   flex-direction: column;

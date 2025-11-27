@@ -18,7 +18,12 @@ function FarmerDashboard() {
     cin: [],
     landPapers: [],
     proofOfExploitation: [],
-    expertReport: []
+    expertReport: [],
+    equipmentRequest: [] // For solution 2
+  })
+  const [equipmentRequest, setEquipmentRequest] = useState({
+    equipmentType: '',
+    additionalInfo: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [farmerInfo, setFarmerInfo] = useState({
@@ -144,12 +149,21 @@ function FarmerDashboard() {
       return
     }
 
-    // Validate required files
-    if (uploadedFiles.cin.length === 0 || uploadedFiles.landPapers.length === 0 || uploadedFiles.proofOfExploitation.length === 0) {
-      alert(language === 'ar' 
-        ? 'يرجى رفع جميع الوثائق المطلوبة (CIN، أوراق الأرض، إثبات الاستغلال)' 
-        : 'Veuillez télécharger tous les documents requis (CIN, papiers de terrain, preuve d\'exploitation)')
-      return
+    // Validate required files based on solution
+    if (solution === '1') {
+      if (uploadedFiles.cin.length === 0 || uploadedFiles.landPapers.length === 0 || uploadedFiles.proofOfExploitation.length === 0) {
+        alert(language === 'ar' 
+          ? 'يرجى رفع جميع الوثائق المطلوبة (CIN، أوراق الأرض، إثبات الاستغلال)' 
+          : 'Veuillez télécharger tous les documents requis (CIN, papiers de terrain, preuve d\'exploitation)')
+        return
+      }
+    } else {
+      if (uploadedFiles.cin.length === 0 || uploadedFiles.landPapers.length === 0 || !equipmentRequest.equipmentType) {
+        alert(language === 'ar' 
+          ? 'يرجى رفع جميع الوثائق المطلوبة (CIN، أوراق الأرض) واختيار نوع المعدات' 
+          : 'Veuillez télécharger tous les documents requis (CIN, papiers de terrain) et sélectionner le type d\'équipement')
+        return
+      }
     }
 
     setIsSubmitting(true)
@@ -165,8 +179,11 @@ function FarmerDashboard() {
         cin: uploadedFiles.cin.map(f => ({ name: f.name, size: f.size, type: f.type })),
         landPapers: uploadedFiles.landPapers.map(f => ({ name: f.name, size: f.size, type: f.type })),
         proofOfExploitation: uploadedFiles.proofOfExploitation.map(f => ({ name: f.name, size: f.size, type: f.type })),
-        expertReport: uploadedFiles.expertReport.map(f => ({ name: f.name, size: f.size, type: f.type }))
+        expertReport: uploadedFiles.expertReport.map(f => ({ name: f.name, size: f.size, type: f.type })),
+        equipmentRequest: uploadedFiles.equipmentRequest.map(f => ({ name: f.name, size: f.size, type: f.type }))
       },
+      equipmentType: solution === '2' ? equipmentRequest.equipmentType : null,
+      equipmentAdditionalInfo: solution === '2' ? equipmentRequest.additionalInfo : null,
       status: 'pending',
       submittedAt: new Date().toISOString(),
       bankType: solution === '1' ? 'normal' : 'islamic'
@@ -534,6 +551,198 @@ function FarmerDashboard() {
             </div>
           ) : (
             <div className="solution-content">
+              {/* Personal Information Form */}
+              <div className="info-card">
+                <h3>{language === 'ar' ? 'المعلومات الشخصية' : 'Informations personnelles'}</h3>
+                <div className="form-group">
+                  <label>{t.name}</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    value={farmerInfo.name}
+                    onChange={(e) => setFarmerInfo({ ...farmerInfo, name: e.target.value })}
+                    placeholder={language === 'ar' ? 'أدخل اسمك الكامل' : 'Entrez votre nom complet'}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>{t.cin}</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    value={farmerInfo.cin}
+                    onChange={(e) => setFarmerInfo({ ...farmerInfo, cin: e.target.value })}
+                    placeholder={language === 'ar' ? 'أدخل رقم بطاقة التعريف الوطنية' : 'Entrez votre numéro CIN'}
+                  />
+                </div>
+              </div>
+
+              {/* Application Status */}
+              {applicationStatus && (
+                <div className="info-card status-card">
+                  <h3>{language === 'ar' ? 'حالة الطلب' : 'Statut de la demande'}</h3>
+                  <div className={`status-display ${applicationStatus}`}>
+                    <span className="status-icon">
+                      {applicationStatus === 'approved' ? '✅' : applicationStatus === 'rejected' ? '❌' : '⏳'}
+                    </span>
+                    <span className="status-text">
+                      {applicationStatus === 'approved' 
+                        ? (language === 'ar' ? 'تم الموافقة على طلبك' : 'Votre demande a été approuvée')
+                        : applicationStatus === 'rejected'
+                        ? (language === 'ar' ? 'تم رفض طلبك' : 'Votre demande a été rejetée')
+                        : (language === 'ar' ? 'طلبك قيد المراجعة' : 'Votre demande est en cours d\'examen')
+                      }
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* File Upload Section */}
+              <div className="info-card upload-section">
+                <h3>{t.uploadDocuments}</h3>
+                <p className="upload-description">
+                  {language === 'ar' 
+                    ? 'قم برفع جميع الوثائق المطلوبة لطلب المعدات من البنك الإسلامي'
+                    : 'Téléchargez tous les documents requis pour votre demande d\'équipements auprès de la banque islamique'}
+                </p>
+                
+                <div className="upload-grid">
+                  {/* CIN Upload */}
+                  <div className="upload-item">
+                    <label className="upload-label">{t.cinDocument}</label>
+                    <div 
+                      className="upload-zone"
+                      onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('drag-over') }}
+                      onDragLeave={(e) => { e.preventDefault(); e.currentTarget.classList.remove('drag-over') }}
+                      onDrop={(e) => {
+                        e.preventDefault()
+                        e.currentTarget.classList.remove('drag-over')
+                        handleFileUpload('cin', e.dataTransfer.files)
+                      }}
+                      onClick={() => document.getElementById('cin-upload-2').click()}
+                    >
+                      <input
+                        id="cin-upload-2"
+                        type="file"
+                        multiple
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        style={{ display: 'none' }}
+                        onChange={(e) => handleFileUpload('cin', e.target.files)}
+                      />
+                      <div className="upload-icon">🆔</div>
+                      <p className="upload-text">{t.dragDropFiles}</p>
+                      <p className="upload-hint">{t.maxFileSize} • {t.supportedFormats}</p>
+                    </div>
+                    {uploadedFiles.cin.length > 0 && (
+                      <div className="uploaded-files-list">
+                        {uploadedFiles.cin.map(file => (
+                          <div key={file.id} className="uploaded-file-item">
+                            <span className="file-name">{file.name}</span>
+                            <span className="file-size">{formatFileSize(file.size)}</span>
+                            <button 
+                              className="btn-delete-file"
+                              onClick={() => handleDeleteFile('cin', file.id)}
+                            >
+                              {t.deleteFile}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Land Papers Upload */}
+                  <div className="upload-item">
+                    <label className="upload-label">{t.landPapersDocument}</label>
+                    <div 
+                      className="upload-zone"
+                      onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('drag-over') }}
+                      onDragLeave={(e) => { e.preventDefault(); e.currentTarget.classList.remove('drag-over') }}
+                      onDrop={(e) => {
+                        e.preventDefault()
+                        e.currentTarget.classList.remove('drag-over')
+                        handleFileUpload('landPapers', e.dataTransfer.files)
+                      }}
+                      onClick={() => document.getElementById('landPapers-upload-2').click()}
+                    >
+                      <input
+                        id="landPapers-upload-2"
+                        type="file"
+                        multiple
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        style={{ display: 'none' }}
+                        onChange={(e) => handleFileUpload('landPapers', e.target.files)}
+                      />
+                      <div className="upload-icon">📋</div>
+                      <p className="upload-text">{t.dragDropFiles}</p>
+                      <p className="upload-hint">{t.maxFileSize} • {t.supportedFormats}</p>
+                    </div>
+                    {uploadedFiles.landPapers.length > 0 && (
+                      <div className="uploaded-files-list">
+                        {uploadedFiles.landPapers.map(file => (
+                          <div key={file.id} className="uploaded-file-item">
+                            <span className="file-name">{file.name}</span>
+                            <span className="file-size">{formatFileSize(file.size)}</span>
+                            <button 
+                              className="btn-delete-file"
+                              onClick={() => handleDeleteFile('landPapers', file.id)}
+                            >
+                              {t.deleteFile}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Equipment Request Document Upload */}
+                  <div className="upload-item">
+                    <label className="upload-label">
+                      {language === 'ar' ? 'وثائق طلب المعدات' : 'Documents de demande d\'équipements'}
+                    </label>
+                    <div 
+                      className="upload-zone"
+                      onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('drag-over') }}
+                      onDragLeave={(e) => { e.preventDefault(); e.currentTarget.classList.remove('drag-over') }}
+                      onDrop={(e) => {
+                        e.preventDefault()
+                        e.currentTarget.classList.remove('drag-over')
+                        handleFileUpload('equipmentRequest', e.dataTransfer.files)
+                      }}
+                      onClick={() => document.getElementById('equipmentRequest-upload').click()}
+                    >
+                      <input
+                        id="equipmentRequest-upload"
+                        type="file"
+                        multiple
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        style={{ display: 'none' }}
+                        onChange={(e) => handleFileUpload('equipmentRequest', e.target.files)}
+                      />
+                      <div className="upload-icon">📦</div>
+                      <p className="upload-text">{t.dragDropFiles}</p>
+                      <p className="upload-hint">{t.maxFileSize} • {t.supportedFormats}</p>
+                    </div>
+                    {uploadedFiles.equipmentRequest.length > 0 && (
+                      <div className="uploaded-files-list">
+                        {uploadedFiles.equipmentRequest.map(file => (
+                          <div key={file.id} className="uploaded-file-item">
+                            <span className="file-name">{file.name}</span>
+                            <span className="file-size">{formatFileSize(file.size)}</span>
+                            <button 
+                              className="btn-delete-file"
+                              onClick={() => handleDeleteFile('equipmentRequest', file.id)}
+                            >
+                              {t.deleteFile}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Equipment Request Form */}
               <div className="info-card">
                 <h3>{t.solution2Title}</h3>
                 <div className="equipment-request">
@@ -541,30 +750,34 @@ function FarmerDashboard() {
                   <div className="request-form">
                     <div className="form-group">
                       <label>{language === 'ar' ? 'نوع المعدات المطلوبة' : 'Type d\'équipement requis'}</label>
-                      <select className="form-select">
-                        <option>{language === 'ar' ? 'اختر المعدات' : 'Sélectionner l\'équipement'}</option>
-                        <option>{language === 'ar' ? 'جرار زراعي' : 'Tracteur'}</option>
-                        <option>{language === 'ar' ? 'مضخة مياه' : 'Pompe à eau'}</option>
-                        <option>{language === 'ar' ? 'معدات الري' : 'Équipement d\'irrigation'}</option>
-                        <option>{language === 'ar' ? 'حاصد' : 'Moissonneuse'}</option>
+                      <select 
+                        className="form-select"
+                        value={equipmentRequest.equipmentType}
+                        onChange={(e) => setEquipmentRequest({ ...equipmentRequest, equipmentType: e.target.value })}
+                      >
+                        <option value="">{language === 'ar' ? 'اختر المعدات' : 'Sélectionner l\'équipement'}</option>
+                        <option value={language === 'ar' ? 'جرار زراعي' : 'Tracteur'}>{language === 'ar' ? 'جرار زراعي' : 'Tracteur'}</option>
+                        <option value={language === 'ar' ? 'مضخة مياه' : 'Pompe à eau'}>{language === 'ar' ? 'مضخة مياه' : 'Pompe à eau'}</option>
+                        <option value={language === 'ar' ? 'معدات الري' : 'Équipement d\'irrigation'}>{language === 'ar' ? 'معدات الري' : 'Équipement d\'irrigation'}</option>
+                        <option value={language === 'ar' ? 'حاصد' : 'Moissonneuse'}>{language === 'ar' ? 'حاصد' : 'Moissonneuse'}</option>
                       </select>
                     </div>
                     <div className="form-group">
                       <label>{language === 'ar' ? 'معلومات إضافية' : 'Informations supplémentaires'}</label>
                       <textarea 
                         className="form-textarea"
+                        value={equipmentRequest.additionalInfo}
+                        onChange={(e) => setEquipmentRequest({ ...equipmentRequest, additionalInfo: e.target.value })}
                         placeholder={language === 'ar' ? 'أدخل تفاصيل إضافية عن طلبك...' : 'Entrez des détails supplémentaires sur votre demande...'}
                       />
                     </div>
-                    <button className="btn-submit-request">
-                      {language === 'ar' ? 'إرسال الطلب' : 'Envoyer la demande'}
+                    <button 
+                      className="btn-submit-documents"
+                      onClick={handleSubmitDocuments}
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? t.submitting : t.submitDocuments}
                     </button>
-                  </div>
-                </div>
-                <div className="request-status">
-                  <h4>{language === 'ar' ? 'حالة الطلبات السابقة' : 'Statut des demandes précédentes'}</h4>
-                  <div className="status-item">
-                    <span className="status-label">{language === 'ar' ? 'لا توجد طلبات حالياً' : 'Aucune demande pour le moment'}</span>
                   </div>
                 </div>
               </div>

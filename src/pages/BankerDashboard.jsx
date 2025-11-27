@@ -130,7 +130,9 @@ function BankerDashboard() {
             name: app.farmerName,
             cin: app.cin,
             email: app.farmerEmail,
-            equipmentDemands: [], // Will be filled from solution 2 form
+            equipmentDemands: app.equipmentType ? [app.equipmentType] : [],
+            equipmentType: app.equipmentType,
+            equipmentAdditionalInfo: app.equipmentAdditionalInfo,
             landInformation: app.files.landPapers.length > 0
               ? `${app.files.landPapers.length} ${language === 'ar' ? 'ملف' : 'fichier(s)'}`
               : (language === 'ar' ? 'لا توجد ملفات' : 'Aucun fichier'),
@@ -333,15 +335,71 @@ function BankerDashboard() {
                       <>
                         <div className="info-section">
                           <h4>{t.equipmentDemands}</h4>
-                          <ul className="equipment-list">
-                            {farmer.equipmentDemands.map((equipment, idx) => (
-                              <li key={idx}>{equipment}</li>
-                            ))}
-                          </ul>
+                          {farmer.equipmentType ? (
+                            <div className="equipment-list">
+                              <div className="equipment-item">{farmer.equipmentType}</div>
+                            </div>
+                          ) : (
+                            <ul className="equipment-list">
+                              {farmer.equipmentDemands.map((equipment, idx) => (
+                                <li key={idx}>{equipment}</li>
+                              ))}
+                            </ul>
+                          )}
+                          {farmer.equipmentAdditionalInfo && (
+                            <div className="info-text" style={{ marginTop: '0.5rem' }}>
+                              <strong>{language === 'ar' ? 'معلومات إضافية:' : 'Informations supplémentaires:'}</strong>
+                              <p>{farmer.equipmentAdditionalInfo}</p>
+                            </div>
+                          )}
+                        </div>
+                        <div className="info-section">
+                          <h4>{t.cinDocument}</h4>
+                          {farmer.files?.cin && farmer.files.cin.length > 0 ? (
+                            <div className="files-list">
+                              {farmer.files.cin.map((file, idx) => (
+                                <div key={idx} className="file-item">
+                                  <span className="file-icon">🆔</span>
+                                  <span className="file-name">{file.name}</span>
+                                  <span className="file-size">({(file.size / 1024).toFixed(1)} KB)</span>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="info-text">{language === 'ar' ? 'لا توجد ملفات' : 'Aucun fichier'}</p>
+                          )}
                         </div>
                         <div className="info-section">
                           <h4>{t.landInformation}</h4>
-                          <p className="info-text">{farmer.landInformation}</p>
+                          {farmer.files?.landPapers && farmer.files.landPapers.length > 0 ? (
+                            <div className="files-list">
+                              {farmer.files.landPapers.map((file, idx) => (
+                                <div key={idx} className="file-item">
+                                  <span className="file-icon">📋</span>
+                                  <span className="file-name">{file.name}</span>
+                                  <span className="file-size">({(file.size / 1024).toFixed(1)} KB)</span>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="info-text">{farmer.landInformation}</p>
+                          )}
+                        </div>
+                        <div className="info-section">
+                          <h4>{language === 'ar' ? 'وثائق طلب المعدات' : 'Documents de demande d\'équipements'}</h4>
+                          {farmer.files?.equipmentRequest && farmer.files.equipmentRequest.length > 0 ? (
+                            <div className="files-list">
+                              {farmer.files.equipmentRequest.map((file, idx) => (
+                                <div key={idx} className="file-item">
+                                  <span className="file-icon">📦</span>
+                                  <span className="file-name">{file.name}</span>
+                                  <span className="file-size">({(file.size / 1024).toFixed(1)} KB)</span>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="info-text">{language === 'ar' ? 'لا توجد ملفات' : 'Aucun fichier'}</p>
+                          )}
                         </div>
                       </>
                     )}
