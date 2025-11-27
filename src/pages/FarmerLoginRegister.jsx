@@ -79,7 +79,7 @@ function FarmerLoginRegister() {
           solution: solution,
           type: 'farmer'
         }))
-        navigate(`/farmer/dashboard?solution=${solution}`)
+        navigate(`farmer/dashboard?solution=${solution}`)
       } else {
         // Register
         localStorage.setItem('farmerAuth', JSON.stringify({
@@ -87,7 +87,7 @@ function FarmerLoginRegister() {
           solution: solution,
           type: 'farmer'
         }))
-        navigate(`/farmer/dashboard?solution=${solution}`)
+        navigate(`farmer/dashboard?solution=${solution}`)
       }
     }, 1000)
   }
@@ -188,7 +188,7 @@ function FarmerLoginRegister() {
           <div className="auth-footer">
             <button 
               className="btn-back"
-              onClick={() => navigate('/farmer')}
+              onClick={() => navigate('farmer')}
             >
               ← {t.backToHome}
             </button>

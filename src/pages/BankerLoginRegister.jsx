@@ -85,7 +85,7 @@ function BankerLoginRegister() {
         }))
         
         // Redirect to dashboard
-        navigate(`/banker/dashboard?type=${bankType}`)
+        navigate(`banker/dashboard?type=${bankType}`)
       } else {
         // Register
         console.log('Register attempt:', formData.email)
@@ -97,7 +97,7 @@ function BankerLoginRegister() {
         }))
         
         // Redirect to dashboard
-        navigate(`/banker/dashboard?type=${bankType}`)
+        navigate(`banker/dashboard?type=${bankType}`)
       }
     }, 1000)
   }
@@ -198,7 +198,7 @@ function BankerLoginRegister() {
           <div className="auth-footer">
             <button 
               className="btn-back"
-              onClick={() => navigate('/banker')}
+              onClick={() => navigate('banker')}
             >
               ← {t.backToBankSelection}
             </button>

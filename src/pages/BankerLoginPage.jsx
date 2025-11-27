@@ -11,7 +11,7 @@ function BankerLoginPage() {
   const t = translations[language]
 
   const handleBankSelection = (bankType) => {
-    navigate(`/banker/login?type=${bankType}`)
+    navigate(`banker/login?type=${bankType}`)
   }
 
   return (

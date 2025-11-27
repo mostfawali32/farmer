@@ -19,7 +19,7 @@ function FarmerDashboard() {
     // Check authentication
     const auth = localStorage.getItem('farmerAuth')
     if (!auth) {
-      navigate(`/farmer/login?solution=${solution}`)
+      navigate(`farmer/login?solution=${solution}`)
       return
     }
     
@@ -27,13 +27,13 @@ function FarmerDashboard() {
       const authData = JSON.parse(auth)
       setUserInfo(authData)
     } catch (error) {
-      navigate(`/farmer/login?solution=${solution}`)
+      navigate(`farmer/login?solution=${solution}`)
     }
   }, [navigate, solution])
 
   const handleLogout = () => {
     localStorage.removeItem('farmerAuth')
-    navigate('/farmer')
+    navigate('farmer')
   }
 
   if (!userInfo) {
@@ -162,7 +162,7 @@ function FarmerDashboard() {
           <div className="back-button-container">
             <button 
               className="btn-back"
-              onClick={() => navigate('/farmer')}
+              onClick={() => navigate('farmer')}
             >
               ← {t.backToHome}
             </button>
