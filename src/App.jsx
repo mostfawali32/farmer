@@ -19,8 +19,8 @@ function App() {
           <LanguageSwitcher />
           <TextToSpeechHandler />
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="farmer" element={<FarmerPage />} />
+            <Route path="/farmer" element={<HomePage />} />
+            <Route path="farmer/farmer" element={<FarmerPage />} />
             <Route path="farmer/login" element={<FarmerLoginRegister />} />
             <Route path="farmer/dashboard" element={<FarmerDashboard />} />
             <Route path="banker" element={<BankerLoginPage />} />
